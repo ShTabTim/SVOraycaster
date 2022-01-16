@@ -10,6 +10,7 @@
     <ClCompile Include="FundLibs\FileHelper\FileHelper.cpp" />
     <ClCompile Include="FundLibs\ObjectsGL\Shader.cpp" />
     <ClCompile Include="SVO.cpp" />
+    <ClCompile Include="Simplex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FundLibs\BarakWinHelper\Barak.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="FundLibs\FileHelper\FileHelper.hpp" />
     <ClInclude Include="FundLibs\ObjectsGL\Shader.h" />
     <ClInclude Include="SVO.h" />
+    <ClInclude Include="Simplex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\main.frag.glsl" />

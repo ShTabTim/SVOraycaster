@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <vector>
+#include "Simplex.h"
 
 typedef struct vox {
 	GLuint mask;
@@ -14,6 +15,7 @@ private:
 	GLuint voxels_buffer;
 	std::vector<vox> vs;
 	GLuint minScale = 2, maxScale = 8;
+	SimplexNoise nois;
 public:
 	SVO() {
 		vs.emplace_back();
@@ -24,13 +26,13 @@ public:
 		for (int i = 0; i < 1<<maxScale; i++)
 			for (int j = 0; j < 1<<maxScale; j++)
 				for (int k = 0; k < 1<<maxScale; k++)
-					if(k <  - 64 * sin(3.1415 * i / 32.0f) * sin(3.1415 * j / 32.0f) * sin(3.1415 * k / 32.0f))
-						setVox(i, k, j, rand()%9);
+					if(j < 20+20*nois.noise(i/64.0f, k/64.0f))
+						setVox(i, j, k, (sin(3.1415 * i / 32.0f) * sin(3.1415 * k / 32.0f) * sin(3.1415 * j / 32.0f))*4+4, 8);
 	}
 
 
 
-	void setVox(int x, int y, int z, GLuint id) {
+	void setVox(int x, int y, int z, GLuint id, GLuint layer) {
 		int current_x = x;
 		int current_y = y;
 		int current_z = z;
@@ -55,19 +57,18 @@ public:
 			current_y -= current_size * sub_y;
 			current_z -= current_size * sub_z;
 
-			GLuint current_id = (current_element.mask << sub_index);
+			GLuint current_id = (current_element.mask >> sub_index) >> 8;
 
-			if (!(current_id & 0b1000000000000000)) {
+			if (!(current_id & 1)) {
 				// Index for new element's subs
 				int new_index = vs.size();
 				vs[current_element.child + sub_index].child = new_index;
 
 				// Update current sub status
-				current_element.mask |= (0b1000000000000000 >> sub_index);
+				current_element.mask |= (1 << sub_index)<<8;
 
 				// Update parent's leaf status
-				if (last_index != -1)
-					vs[last_index].mask |= (0b10000000 >> last_sub);
+				if (last_index != -1) vs[last_index].mask |= (1 << last_sub);
 
 				// Allocate new subs if not leaf
 				if (current_size >= (1 << minScale))
@@ -90,5 +91,9 @@ public:
 	}
 	void bindBuffer() {
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, voxels_buffer);
+	}
+	void setDateOnGpu() {
+		//glBindBuffer(GL_SHADER_STORAGE_BUFFER, voxels_buffer);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(vox) * vs.size(), vs.data(), GL_DYNAMIC_DRAW);
 	}
 };

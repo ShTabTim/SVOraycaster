@@ -149,6 +149,7 @@
     <ClCompile Include="FundLibs\FileHelper\FileHelper.cpp" />
     <ClCompile Include="FundLibs\ObjectsGL\Shader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Simplex.cpp" />
     <ClCompile Include="SVO.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="FundLibs\BarakWinHelper\Win\win.h" />
     <ClInclude Include="FundLibs\FileHelper\FileHelper.hpp" />
     <ClInclude Include="FundLibs\ObjectsGL\Shader.h" />
+    <ClInclude Include="Simplex.h" />
     <ClInclude Include="SVO.h" />
   </ItemGroup>
   <ItemGroup>

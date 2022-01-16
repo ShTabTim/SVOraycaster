@@ -29,8 +29,8 @@ int main() {
 	//creates and load voxel array to GPU
 	svo.createBuffer();
 
-	float speed = 20;
-	float angSpeed = 8;
+	float speed = 256;
+	float angSpeed = 2;
 	char vel[3];
 	float pos[3] = { 0, 9, 0 };
 	char angVel[2] = { 0, 0 };
@@ -47,6 +47,12 @@ int main() {
 		float dt = dTime.count();
 		
 		KeyUpdate();
+
+		if(GetKey('B').bHeld) {
+			svo.setVox(pos[2], pos[1], pos[0], 1, 8);
+			svo.setDateOnGpu();
+		}
+
 		if (GetKey(VK_ESCAPE).bHeld)
 			return 1;
 		angVel[0] = 0; angVel[1] = 0;
